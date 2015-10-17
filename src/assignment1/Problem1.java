@@ -9,7 +9,7 @@ import java.util.Scanner;
 public class Problem1 {
 	
 	private HashMap<Integer,String> vocabulary;	
-	private HashMap<String,HashMap<Integer,Double>> ngram;  // key string is formed as ""+x_(t-n)+"_"+x_(t-n+1) .... +"_"+x_(t-1) 
+	private HashMap<String,HashMap<Integer,Double>> ngram =new HashMap<>(400000);  // key string is formed as ""+x_(t-n)+"_"+x_(t-n+1) .... +"_"+x_(t-1) 
 	
 	private void loadVocabulary(String voc_file) throws IOException{
 		long st = System.currentTimeMillis();
@@ -23,11 +23,12 @@ public class Problem1 {
 	}
 	
 	private void loadUnigram(String file) throws IOException{
-		long st = System.currentTimeMillis();
-		ngram = new HashMap<>(150000);
+		long st = System.currentTimeMillis();		
 		Scanner sc = new Scanner(new File(file));
-		while(sc.hasNext()){
-			ngram.put(""+sc.nextInt(), Math.pow(10,sc.nextDouble()));
+		ngram.put("unigram", new HashMap<Integer,Double>());
+		while (sc.hasNext()) {			
+			int xt = sc.nextInt();  //x			
+			ngram.get("unigram").put(xt, Math.pow(10,sc.nextDouble()));			
 		}
 		sc.close();
 		System.out.println("Unigram loaded in "+(double)(System.currentTimeMillis()-st)/1000+" secs");
@@ -36,31 +37,31 @@ public class Problem1 {
 	private void loadBigram(String file) throws IOException {
 		long st = System.currentTimeMillis();		
 		Scanner sc = new Scanner(new File(file));
-		while (sc.hasNext()) {
-			int xt_1=sc.nextInt();  // x_(t-1)
-			int xt=sc.nextInt();  // x_t 
-			if(!bigram.containsKey(xt_1)){
-				bigram.put(xt_1, new HashMap<Integer,Double>());
+		while (sc.hasNext()) {			
+			int xt_1 = sc.nextInt();  //x_(t-1)
+			int xt = sc.nextInt();  //x
+			String key = ""+xt_1;
+			if(!ngram.containsKey(key)){
+				ngram.put(key, new HashMap<Integer,Double>());
 			}
-			bigram.get(xt_1).put(xt, Math.pow(10,sc.nextDouble()));
+			ngram.get(key).put(xt, Math.pow(10,sc.nextDouble()));			
 		}
 		sc.close();
 		System.out.println("Bigram loaded in "+(double)(System.currentTimeMillis()-st)/1000+" secs");
 	}
 	
 	private void loadTrigram(String file) throws IOException {
-		long st = System.currentTimeMillis();
-		trigram = new HashMap<>();
+		long st = System.currentTimeMillis();		
 		Scanner sc = new Scanner(new File(file));
 		while (sc.hasNext()) {
 			int xt_2 = sc.nextInt();  //x_(t-2)
 			int xt_1 = sc.nextInt();  //x_(t-1)
 			int xt = sc.nextInt();  //x
 			String key = ""+xt_2+"_"+xt_1;
-			if(!trigram.containsKey(key)){
-				trigram.put(key, new HashMap<Integer,Double>());
+			if(!ngram.containsKey(key)){
+				ngram.put(key, new HashMap<Integer,Double>());
 			}
-			trigram.get(key).put(xt, Math.pow(10,sc.nextDouble()));			
+			ngram.get(key).put(xt, Math.pow(10,sc.nextDouble()));			
 		}
 		sc.close();
 		System.out.println("Trigram loaded in "+(double)(System.currentTimeMillis()-st)/1000+" secs");
@@ -90,19 +91,19 @@ public class Problem1 {
 		int c =0;
 		sen.append(vocabulary.get(xt_2));
 		while(xt !=152 && c++< 100){
-			xt = getRandomFromDist(trigram.get(""+xt_2+"_"+xt_1));
+			xt = getRandomFromDist(ngram.get(""+xt_2+"_"+xt_1));
 			//System.out.println("tri "+xt+" "+vocabulary.get(xt));
 			if(xt!=-1){
 				sen.append(vocabulary.get(xt)+" ");				
 			}
 			else{
-				xt = getRandomFromDist(bigram.get(xt_1));
+				xt = getRandomFromDist(ngram.get(""+xt_1));
 			//	System.out.println("bi "+xt+" "+vocabulary.get(xt));
 				if(xt!=-1){
 					sen.append(vocabulary.get(xt)+" ");
 				}
 				else{
-					xt = getRandomFromDist(unigram);
+					xt = getRandomFromDist(ngram.get("unigram"));
 				//	System.out.println("uni "+xt+" "+vocabulary.get(xt));
 					sen.append(vocabulary.get(xt)+" ");
 				}
