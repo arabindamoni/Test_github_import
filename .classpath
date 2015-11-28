@@ -6,5 +6,10 @@
 			<attribute name="owner.project.facets" value="java"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="/home/arabinda/Documents/NLP_assignment_2/stanford-postagger-2015-04-20/stanford-postagger.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:file:/home/arabinda/Documents/NLP_assignment_2/stanford-postagger-2015-04-20/stanford-postagger-3.5.2-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>
