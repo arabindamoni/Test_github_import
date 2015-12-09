@@ -1,6 +1,7 @@
 package assignment2;
 
 import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.InputStreamReader;
 
@@ -19,20 +20,22 @@ public class Test {
 		BufferedReader br = new BufferedReader(new InputStreamReader(process.getInputStream()));
 		String line = null;
 					
-		FileWriter fw = new FileWriter(outfile);
+		BufferedReader in = new BufferedReader(new FileReader(infile));
+		FileWriter fw = new FileWriter(outfile);		
 		while ((line = br.readLine()) != null){				
-			//System.out.println(line);		
-			fw.write(line+"\n");
+			//System.out.println(line);					
+			fw.write(in.readLine()+" "+line+"\n");
 		}		
 		fw.close();
+		in.close();
 		if (process.waitFor() == 0) {
 			//System.out.println("Testing Complete");				
 		}
 	}
 
 	public static void main(String[] args) throws Exception {
-		//test(args[0],args[1]);
-		test("Resources/NLP_assignment_2/test1","Resources/NLP_assignment_2/out");
+		test(args[0],args[1]);
+		//test("Resources/NLP_assignment_2/test1","Resources/NLP_assignment_2/out");
 	}
 
 }

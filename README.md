@@ -1,3 +1,3 @@
 # README #
 
-Assigments of NLP
+Assigment 2 of NLP
