@@ -1,3 +1,3 @@
 # README #
 
-Assigment 2 of NLP
+Assigment 1 & 2 of NLU course.
